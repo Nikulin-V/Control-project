@@ -12,4 +12,4 @@ class Gadget:
         self.TYPE = TYPE
         self.BRAND = BRAND
         self.ID = ID
-
+s
