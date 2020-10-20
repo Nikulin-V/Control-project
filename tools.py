@@ -60,7 +60,7 @@ class People:
         else:
             f = open('people.txt')
             self.people = [Person(*record.split(', ')) for record in
-                           f.read().replace(';', '').split('\n')]
+                           f.read().replace(';', '').split('\n') if record]
 
     def __str__(self):
         result = ''
@@ -95,7 +95,7 @@ class Equip:
         else:
             f = open('equip.txt')
             self.gadgets = [Gadget(*record.split(', ')) for record in
-                            f.read().replace(';', '').split('\n')]
+                            f.read().replace(';', '').split('\n') if record]
 
     def __str__(self):
         result = ''
@@ -130,7 +130,7 @@ class Works:
         else:
             f = open('works.txt')
             self.works = [Work(*record.split(', ')) for record in
-                          f.read().replace(';', '').split('\n')]
+                          f.read().replace(';', '').split('\n') if record]
 
     def __str__(self):
         result = ''
