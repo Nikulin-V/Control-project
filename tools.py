@@ -35,4 +35,4 @@ class People:
         return result
 
 
-print(People())
+print(People().people[0].EMAIL)
