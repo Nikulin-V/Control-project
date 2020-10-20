@@ -1,8 +1,11 @@
 from tools import *
 
-r = Requests()
-print(r.get_equip_ids())
-r.add_request('157, 2017-11-22, 13, 176, Ne pokazyvaet nichego, 5, *, 15, 13, 17, *, 2017-11-29, '
-              '2017-11-30, 2300;')
-print(r)
-r.make_file()
+
+def search_u(text):
+    p = People()
+    f = open('SEARCH_U.txt', 'w')
+    for person in p.people:
+        if text in person.NAME or text in person.PHONE:
+            f.write(person.__str__() + '\n')
+
+search_u('Vesnin')
