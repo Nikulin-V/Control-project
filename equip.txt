@@ -1,2 +1,2 @@
-176, Samsung, Mobile phone, SM-510NF
-170, Samsung, Mobile phone, SM-510NA
+176, Samsung, Mobile phone, SM-510NF;
+170, Samsung, Mobile phone, SM-510NA;
