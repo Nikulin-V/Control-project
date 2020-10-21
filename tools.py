@@ -210,3 +210,7 @@ class Requests:
 
     def get_costs(self):
         return [request.COST for request in self.requests]
+
+
+class CardInBaseException(Exception):
+    pass
