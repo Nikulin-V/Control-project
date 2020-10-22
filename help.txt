@@ -1,0 +1,14 @@
+HELP - вывод этого окна
+HELP <NEW, LIST, EDIT, PRINT, FIND_U, FIND_E, FIND_W> - вывод помощи по команде
+NEW <USER, EQUIP, WORK> <Строка как в *.txt> - создание новой карточки
+LIST <USER, EQUIP, WORK> - вывод всех карточек выбранной базы данных
+EDIT <ID> <USER, EQUIP, WORK> <Строка как в *.txt без ID> - редактирование карточки
+PRINT <ID> <USER, EQUIP, WORK> - вывод карточки выбранной базы данных
+FIND_U <text> - поиск людей
+FIND_E <text> - поиск оборудования
+FIND_W <text> - поиск работы
+NEW REQUEST - создание нового запроса
+    PUSH <ID, DATE, CLIENT_ID, EQUIP_ID, REASON, MASTER_ID, COMPLETE_DATE, DELIVERY_DATE, COST> - выбрать поле для заполнения
+    PUSH <WORK_IDS> - выбрать поле для ввода списка работ через пробел, например: 1 2 3
+DEL <ID_REQUEST> - удалить запрос по ID
+EXIT - выход из программы
