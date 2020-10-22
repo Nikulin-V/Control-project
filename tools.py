@@ -214,3 +214,11 @@ class Requests:
 
 class CardInBaseException(Exception):
     pass
+
+
+class UnknownCommandException(Exception):
+    pass
+
+
+class ExitException(Exception):
+    pass
