@@ -128,7 +128,99 @@ def del_request(ID):
 
 
 def new_request():
-    pass
+    args = {
+        'ID': '',
+        'DATE': '',
+        'CLIENT_ID': '',
+        'EQUIP_ID': '',
+        'REASON': '',
+        'MASTER_ID': '',
+        'WORK_IDS': '',
+        'COMPLETE_DATE': '',
+        'DELIVERY_DATE': '',
+        'COST': ''
+    }
+    print('Выбирайте поля командой PUSH и вводите значения')
+    print('+------------+')
+    print('|Начало формы|')
+    print('+------------+')
+    for key, value in args.items():
+        print(f'{key}: {str(value)}')
+    print('+-----------+')
+    print('|Конец формы|')
+    print('+-----------+')
+    while not all_filled(args):
+        c = input()
+        command = c.split()
+        if len(command) == 2 and command[0] == 'PUSH' and command[1] in args.keys():
+            value = input()
+            if command[1] == 'ID':
+                if value.isdigit() and int(value) not in Requests().get_ids():
+                    args['ID'] = int(value)
+                else:
+                    raise BadValueException(value)
+            elif command[1] in ['DATE', 'COMPLETE_DATE', 'DELIVERY_DATE']:
+                x = value.split('-')
+                if len(x) == 3 and (x[0] + x[1] + x[2]).isdigit() and len(x[0]) == 4 and \
+                        len(x[1]) == 2 and len(x[2]) == 2 and 1 <= int(x[1]) <= 12 and 1 <= \
+                        int(x[2]) <= 31:
+                    args[command[1]] = value
+            elif command[1] == 'CLIENT_ID':
+                if value.isdigit() and int(value) in People().get_ids():
+                    args['CLIENT_ID'] = int(value)
+                else:
+                    raise BadValueException(value)
+            elif command[1] == 'EQUIP_ID':
+                if value.isdigit() and int(value) in Equip().get_ids():
+                    args['EQUIP_ID'] = int(value)
+                else:
+                    raise BadValueException(value)
+            elif command[1] == 'REASON':
+                args['REASON'] = value
+            elif command[1] == 'MASTER_ID':
+                if value.isdigit() and int(value) in \
+                        People().get_ids() and 1 <= int(value) <= 20:
+                    args['MASTER_ID'] = int(value)
+                else:
+                    raise BadValueException(value)
+            elif command[1] == 'WORK_IDS':
+                value = value.split()
+                check = True
+                for v in value:
+                    if not v.isdigit() and int(v) in Works().get_ids():
+                        check = False
+                if check:
+                    args['WORK_IDS'] = value
+                else:
+                    raise BadValueException(' '.join(value))
+            else:
+                raise UnknownFieldNameException(command[1])
+            if args['WORK_IDS']:
+                s = 0
+                for work_id in args['WORK_IDS']:
+                    s += Works().get_prices()[Works().get_ids().index(int(work_id))]
+                args['COST'] = s
+            print('+------------+')
+            print('|Начало формы|')
+            print('+------------+')
+            for key, value in args.items():
+                print(f'{key}: {str(value)}')
+            print('+-----------+')
+            print('|Конец формы|')
+            print('+-----------+')
+            if all_filled(args):
+                Requests().add_request(f"{', '.join([value for value in args.values()])};")
+                break
+        else:
+            raise UnknownCommandException(c)
+
+
+def all_filled(args):
+    check = True
+    for value in args.values():
+        if value == '':
+            check = False
+    return check
 
 
 def main():
@@ -165,6 +257,7 @@ def main():
 
 if __name__ == '__main__':
     while True:
+        # noinspection PyBroadException
         try:
             main()
         except CardInBaseException as file_name:
@@ -174,9 +267,16 @@ if __name__ == '__main__':
         except ExitException:
             print('Выход...')
             break
+        except UnknownFieldNameException as field_name:
+            print(f'Неизвестное поле {field_name}')
+        except BadCommandException as bad_command:
+            print(f'Неверная команда {" ".join(bad_command)}')
+        except BadValueException as bad_value:
+            print(f'Неверное значение {bad_value}')
         except TypeError:
             print('Неизвестная команда')
         except Exception:
             print(Exception.__class__.__name__)
         finally:
             print('----------------------------------------------\n')
+new_request()

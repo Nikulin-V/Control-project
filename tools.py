@@ -222,3 +222,13 @@ class UnknownCommandException(Exception):
 
 class ExitException(Exception):
     pass
+
+
+class BadCommandException(Exception):
+    pass
+
+class UnknownFieldNameException(Exception):
+    pass
+
+class BadValueException(Exception):
+    pass
