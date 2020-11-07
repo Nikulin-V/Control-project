@@ -227,8 +227,10 @@ class ExitException(Exception):
 class BadCommandException(Exception):
     pass
 
+
 class UnknownFieldNameException(Exception):
     pass
+
 
 class BadValueException(Exception):
     pass

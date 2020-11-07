@@ -27,37 +27,60 @@ def search_w(text):
             f.write(work.__str__() + '\n')
 
 
-def new_card(db, line):
+def new_card(db, line, edit=False):
     if db == 'USER':
         p = People()
-        new_person = Person(*line.split())
-        if new_person.PHONE in p.get_phones() or new_person.ID in p.get_ids():
+        new_person = Person(*line.split(', '))
+        if (new_person.PHONE in p.get_phones() or new_person.ID in p.get_ids()) and not edit:
             raise CardInBaseException('user.txt')
-        p.add_person(new_person)
+        p.add_person(line)
+        p.make_file()
     elif db == 'EQUIP':
         e = Equip()
-        new_gadget = Gadget(*line.split())
+        new_gadget = Gadget(*line.split(', '))
         if new_gadget.BRAND in e.get_brands() and new_gadget.MODEL == \
                 e.get_models()[
                     e.get_brands().index(new_gadget.BRAND)] or new_gadget.ID in e.get_ids():
             raise CardInBaseException('equip.txt')
-        e.add_equip(new_gadget)
+        e.add_equip(line)
+        e.make_file()
     elif db == 'WORK':
         w = Works()
-        new_work = Work(*line.split())
+        new_work = Work(*line.split(', '))
         if new_work.WORK in w.get_works() or new_work.ID in w.get_ids():
             raise CardInBaseException('user.txt')
-        w.add_work(new_work)
+        w.add_work(line)
+        w.make_file()
 
 
 def edit_card(db, ID, line):
     if db == 'USER':
-        People().people.pop(People().get_ids().index(ID))
+        f = open('people.txt')
+        data = f.readlines()
+        data.pop(People().get_ids().index(ID))
+        f.close()
+        f = open('people.txt', 'w')
+        f.writelines(data)
+        f.close()
     elif db == 'EQUIP':
         Equip().gadgets.pop(Equip().get_ids().index(ID))
+        f = open('equip.txt')
+        data = f.readlines()
+        data.pop(Equip().get_ids().index(ID))
+        f.close()
+        f = open('equip.txt', 'w')
+        f.writelines(data)
+        f.close()
     elif db == 'WORK':
         Works().works.pop(Works().get_ids().index(ID))
-    new_card(db, line)
+        f = open('works.txt')
+        data = f.readlines()
+        data.pop(Works().get_ids().index(ID))
+        f.close()
+        f = open('works.txt', 'w')
+        f.writelines(data)
+        f.close()
+    new_card(db, line, True)
 
 
 def print_card(db, ID):
@@ -231,14 +254,15 @@ def main():
         elif len(command) == 2:
             print_help(command[1])
     elif command[0] == 'NEW':
-        if len(command) == 3:
-            new_card(command[1], command[2])
-        elif command[1] == 'REQUEST':
+        if command[1] == 'REQUEST':
             new_request()
+        else:
+            new_card(command[1], ' '.join(command[2:]))
+
     elif command[0] == 'LIST' and len(command) == 2:
         list_db(command[1])
-    elif command[0] == 'EDIT' and len(command) == 4:
-        edit_card(int(command[2]), command[1], command[3])
+    elif command[0] == 'EDIT' and len(command) == 6:
+        edit_card(command[2], int(command[1]), command[1] + ', ' + ' '.join(command[3:]))
     elif command[0] == 'PRINT' and len(command) == 3:
         print_card(command[2], int(command[1]))
     elif command[0] == 'FIND_U' and len(command) == 2:
@@ -269,11 +293,10 @@ if __name__ == '__main__':
             break
         except UnknownFieldNameException as field_name:
             print(f'Неизвестное поле {field_name}')
-        except BadCommandException as bad_command:
-            print(f'Неверная команда {" ".join(bad_command)}')
         except BadValueException as bad_value:
             print(f'Неверное значение {bad_value}')
-        except TypeError:
+        except TypeError as e:
+            print(e)
             print('Неизвестная команда')
         except Exception:
             print(Exception.__class__.__name__)
