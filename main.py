@@ -147,7 +147,21 @@ def print_help(command=''):
 
 
 def del_request(ID):
-    Requests().requests.pop(Requests().get_ids().index(ID))
+    i = Requests().get_ids().index(ID)
+    f = open('requests.txt')
+    data = f.readlines()
+    f.close()
+    data = data[:i] + data[i+1:]
+    f = open('requests.txt', 'w')
+    f.writelines(data)
+    f.close()
+
+
+def request_in_requests(ID):
+    for line in open('requests.txt').readlines():
+        if line.split()[1] == str(ID):
+            return True
+    return False
 
 
 def new_request():
