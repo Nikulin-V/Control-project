@@ -261,7 +261,7 @@ def main():
 
     elif command[0] == 'LIST' and len(command) == 2:
         list_db(command[1])
-    elif command[0] == 'EDIT' and len(command) == 6:
+    elif command[0] == 'EDIT':
         edit_card(command[2], int(command[1]), command[1] + ', ' + ' '.join(command[3:]))
     elif command[0] == 'PRINT' and len(command) == 3:
         print_card(command[2], int(command[1]))
@@ -273,6 +273,7 @@ def main():
         search_u(command[1])
     elif command[0] == 'DEL' and len(command) == 2:
         del_request(int(command[1]))
+        Requests().make_file()
     elif command[0] == 'EXIT' and len(command) == 1:
         raise ExitException
     else:
